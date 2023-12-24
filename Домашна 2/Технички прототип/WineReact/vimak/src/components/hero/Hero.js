@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import {APIProvider, Map, AdvancedMarker, Pin, InfoWindow} from '@vis.gl/react-google-maps'
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import api from '../../api/axiosConfig';
 
 
@@ -28,9 +28,11 @@ const Hero = ({ wines }) => {
   const Movino ={lat:41.52159679357502, lng:21.96539342852718}
   const Venec ={lat:41.43396027660053,lng: 22.093714286194047}
   const GD  ={lat:41.478025413394754, lng: 21.932105225792785}
-    
+
   
   const [winery, setWinery] = useState("");
+  const [userLocation, setUserLocation] = useState("");
+
   const fetchVine = async (id) => {
       try {
 
@@ -42,6 +44,24 @@ const Hero = ({ wines }) => {
         console.log(err);
       }
     }
+
+
+    useEffect(()=> {
+      if (navigator && navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const location = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            setUserLocation(location);  
+                  },
+          (error) => {
+            console.error("Error getting user location:", error);
+          }
+        );
+      }
+    }, []);
 
   return (
     <div className='wine-carousel-container'>
@@ -104,10 +124,20 @@ const Hero = ({ wines }) => {
                   <div className="vinarijai">
                       <span className="winfo" style={{fontSize:"1.5em"}}>Рејтинг за винаријата: </span> <span style={{fontSize:"1.7em"}}>{winery.winery_rating}</span>
                   </div>
+                  <div className="vinarijai">
+                      <span className="winfo" style={{fontSize:"1.5em"}}>Оддалеченост од винаријата: </span> <span style={{fontSize:"1.7em"}}>{winery.winery_rating}</span>
+                  </div>
                 </div>
                 <div className="delzamapa">
                   <APIProvider apiKey={'AIzaSyAu016zEmkbzV4rr-L_VFVKvUc2CLBE-t4'}>
                       <Map center={position} zoom={9} style={{width: '900px', height:'600px'}} mapId="7d2c71925b05302f">
+                      <AdvancedMarker position={userLocation}>
+                          <Pin
+                            background={"blue"}
+                            borderColor={"blue"}
+                            glyphColor={"blue"}
+                          />
+                        </AdvancedMarker>
                         <AdvancedMarker position={tikves} onClick={()=>fetchVine('656cd487b5000e83e49308be')}>
                           <Pin
                             background={"red"}
