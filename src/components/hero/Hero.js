@@ -152,7 +152,7 @@ const calculateDistance = (from, to) => {
                           <Pin
                             background={"red"}
                             borderColor={"red"}
-                            glyphColor={"pink"}
+                            glyphColor={"pink"}//a
                           />
                         </AdvancedMarker>
                         <AdvancedMarker position={sopot} onClick={()=>fetchVine('656cd487b5000e83e49308bf', sopot)}>
