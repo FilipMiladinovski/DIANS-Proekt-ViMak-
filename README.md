@@ -4,3 +4,6 @@
 Филип Миладиновски[211291]
 Климентина Ѓуревска [201028]
 Никола Трајковски [211060]
+
+Frontendot e na grankata authadded
+Backendot e na grankata main
