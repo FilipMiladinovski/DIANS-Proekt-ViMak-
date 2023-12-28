@@ -3,13 +3,12 @@ import './Hero.css';
 import Carousel from 'react-material-ui-carousel';
 import { Paper } from '@mui/material';
 import Logo from './Logo.js'
-import {TextField} from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import Navbar from './navbar.js'
 import {APIProvider, Map, AdvancedMarker, Pin, InfoWindow} from '@vis.gl/react-google-maps'
-import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import {useState, useEffect} from 'react'
 import api from '../../api/axiosConfig';
+import Geolib, { getDistance, convertDistance } from 'geolib';
+import Najavabar from './najavabar.js'
 
 
 const Hero = ({ wines }) => {
@@ -32,13 +31,22 @@ const Hero = ({ wines }) => {
   
   const [winery, setWinery] = useState("");
   const [userLocation, setUserLocation] = useState("");
+  const [userDistance, setUserDistance] = useState(null);
 
-  const fetchVine = async (id) => {
+
+  const fetchVine = async (id, wineryLocation) => {
       try {
 
         const response = await api.get(`/api/v1/winery/${id}`);
-        console.log(response.data);
-        setWinery(response.data);
+        const selectedWinery = response.data;
+        setWinery(selectedWinery);
+
+        console.log('User Location:', userLocation);
+        console.log('Winery Location:', wineryLocation);
+
+        const distance = calculateDistance(userLocation, wineryLocation);
+        setUserDistance(distance);
+        console.log(distance);
       } 
       catch(err) {
         console.log(err);
@@ -54,32 +62,33 @@ const Hero = ({ wines }) => {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            setUserLocation(location);  
+            setUserLocation(location); 
                   },
           (error) => {
-            console.error("Error getting user location:", error);
+            console.error("Error getting user location:", error); //drug komentar
           }
         );
       }
     }, []);
 
+const calculateDistance = (from, to) => {
+  const distanceInMeters = getDistance(from, to);
+  const distance = convertDistance(distanceInMeters, 'km');
+  return distance;
+};
+
+
   return (
     <div className='wine-carousel-container'>
+      <Navbar/>
       <Carousel indicators={false}>
-        {wines && wines.map((wine) => (
+        {wines && wines.filter((_, index) => index%11===0).map((wine, index) => (
           <Paper key={wine.id}>
-            <div className='navBar'>
-              <div className='Logo'>
-                <Logo/>
-              </div>
-              <div className='buttons'>
-                <a href="https://www.youtube.com/">Најава</a>
-                <a href="https://www.youtube.com/">Нов Корисник</a>
-                <a id="clic" href="https://www.youtube.com/"><FontAwesomeIcon icon={faCartShopping}/></a>
-              </div>
-              
+            <div style={{display:'flex',justifyContent:"center",alignContent:"center",backgroundColor:"#e6e5d8",height:"4em"}}>
+              <h1 style={{fontStyle:"italic", color:"#bc4448"}}>Вина на акција</h1>
             </div>
             <div className='wine-card-container'>
+              
                   <div className="wine-poster">
                     <img src={wine.wine_url} />
                   </div>
@@ -109,6 +118,7 @@ const Hero = ({ wines }) => {
             </div>
 
           </Paper>
+          
         ))}
       </Carousel>
       <hr/>
@@ -125,7 +135,7 @@ const Hero = ({ wines }) => {
                       <span className="winfo" style={{fontSize:"1.5em"}}>Рејтинг за винаријата: </span> <span style={{fontSize:"1.7em"}}>{winery.winery_rating}</span>
                   </div>
                   <div className="vinarijai">
-                      <span className="winfo" style={{fontSize:"1.5em"}}>Оддалеченост од винаријата: </span> <span style={{fontSize:"1.7em"}}>{winery.winery_rating}</span>
+                      <span className="winfo" style={{fontSize:"1.5em"}}>Оддалеченост од винаријата: </span> <span style={{fontSize:"1.7em"}}>{userDistance}</span>
                   </div>
                 </div>
                 <div className="delzamapa">
@@ -138,91 +148,91 @@ const Hero = ({ wines }) => {
                             glyphColor={"blue"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={tikves} onClick={()=>fetchVine('656cd487b5000e83e49308be')}>
+                        <AdvancedMarker position={tikves} onClick={()=>fetchVine('656cd487b5000e83e49308be', tikves)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={sopot} onClick={()=>fetchVine('656cd487b5000e83e49308bf')}>
+                        <AdvancedMarker position={sopot} onClick={()=>fetchVine('656cd487b5000e83e49308bf', sopot)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={stobi} onClick={()=>fetchVine('656cd487b5000e83e49308c0')}>
+                        <AdvancedMarker position={stobi} onClick={()=>fetchVine('656cd487b5000e83e49308c0', stobi)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={bovin} onClick={()=>fetchVine('656cd487b5000e83e49308c1')}>
+                        <AdvancedMarker position={bovin} onClick={()=>fetchVine('656cd487b5000e83e49308c1', bovin)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={ezimit} onClick={()=>fetchVine('656cd487b5000e83e49308c2')}>
+                        <AdvancedMarker position={ezimit} onClick={()=>fetchVine('656cd487b5000e83e49308c2', ezimit)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={dalvina} onClick={()=>fetchVine('656cd487b5000e83e49308c3')}>
+                        <AdvancedMarker position={dalvina} onClick={()=>fetchVine('656cd487b5000e83e49308c3', dalvina)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={Kamnik} onClick={()=>fetchVine('656cd487b5000e83e49308c4')}>
+                        <AdvancedMarker position={Kamnik} onClick={()=>fetchVine('656cd487b5000e83e49308c4', Kamnik)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={Popov} onClick={()=>fetchVine('656cd487b5000e83e49308c5')}>
+                        <AdvancedMarker position={Popov} onClick={()=>fetchVine('656cd487b5000e83e49308c5', Popov)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={rigo} onClick={()=>fetchVine('656cd487b5000e83e49308c6')}>
+                        <AdvancedMarker position={rigo} onClick={()=>fetchVine('656cd487b5000e83e49308c6', rigo)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={Puklavec} onClick={()=>fetchVine('656cd487b5000e83e49308c7')}>
+                        <AdvancedMarker position={Puklavec} onClick={()=>fetchVine('656cd487b5000e83e49308c7', Puklavec)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={Movino} onClick={()=>fetchVine('656cd487b5000e83e49308c8')}>
+                        <AdvancedMarker position={Movino} onClick={()=>fetchVine('656cd487b5000e83e49308c8', Movino)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={Venec} onClick={()=>fetchVine('656cd487b5000e83e49308c9')}>
+                        <AdvancedMarker position={Venec} onClick={()=>fetchVine('656cd487b5000e83e49308c9', Venec)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
                             glyphColor={"pink"}
                           />
                         </AdvancedMarker>
-                        <AdvancedMarker position={GD} onClick={()=>fetchVine('656cd487b5000e83e49308ca')}>
+                        <AdvancedMarker position={GD} onClick={()=>fetchVine('656cd487b5000e83e49308ca', GD)}>
                           <Pin
                             background={"red"}
                             borderColor={"red"}
