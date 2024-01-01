@@ -1,5 +1,5 @@
 import api from '../api/axiosConfig';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import React from 'react';
 import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import Navbar from './hero/navbar';
@@ -23,6 +23,7 @@ export default function Vina() {
     getWines();
   }, []);
 
+
   return (
     <div className='background'>
       <Navbar />
@@ -43,7 +44,7 @@ export default function Vina() {
                     <Card.Text>
                       Цена: {wine.wine_price}ден.
                     </Card.Text>
-                    <Button variant="primary" className="wine-card-button">
+                    <Button variant="primary" className="wine-card-button" >
                       Додај во корпа
                     </Button>
                   </Card.Body>
