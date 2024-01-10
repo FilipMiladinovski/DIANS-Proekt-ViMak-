@@ -5,5 +5,5 @@
 Климентина Ѓуревска [201028]
 Никола Трајковски [211060]
 
-Frontendot e na grankata authadded
-Backendot e na grankata main
+Frontend e vo DIANS-Proekt-ViMak-/Домашна 2/Технички прототип/WineReact/vimak/
+Backend e vo Domasna 3
