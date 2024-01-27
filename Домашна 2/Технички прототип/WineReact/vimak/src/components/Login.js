@@ -64,7 +64,6 @@ export default function Login() {
                             id="username"
                             value={username}
                             onChange={(e) =>{
-                                console.log('Username changed:', e.target.value);
                                 setUsername(e.target.value)}
                             } 
                             placeholder="Enter your username"
@@ -78,7 +77,6 @@ export default function Login() {
                             id="password"
                             value={password}
                             onChange={(e) => {
-                                console.log('Password changed:', e.target.value);
                                 setPassword(e.target.value)}
                             }
                             placeholder="Enter your password"
@@ -90,25 +88,6 @@ export default function Login() {
                 </div>
 
             </div>
-            <div className="footer" style={{borderTop:"1px solid grey"}}>
-                    <div className="f1">
-                        <div id="kontakt">Контакт:</div>
-                        <div className='kf1'>Е-пошта: vimak@vimak.com</div>
-                        <div className='kf1'>Телефон: 070/000-000</div>
-                        <br></br>
-                        <div>Сите права се задржани</div>
-                    </div>
-                    <div className="f2">
-                      <div className='f2Logo'>
-                            <Logo/>
-                          </div>
-                    </div>
-                    <div className="f3">
-                    <br/>
-                        <div id="politika">Политика на приватност</div>
-                        <div>Услови за купување</div>
-                    </div>
-                </div>
         </div>
         )
 }

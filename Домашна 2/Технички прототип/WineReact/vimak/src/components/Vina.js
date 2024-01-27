@@ -2,26 +2,35 @@ import api from '../api/axiosConfig';
 import { useState, useEffect, useContext } from 'react';
 import React from 'react';
 import { Card, Button, Container, Row, Col } from 'react-bootstrap';
-import Navbar from './hero/navbar';
 import './Vina.css'; 
-import Logo from './hero/Logo'
+import Navbar from './hero/navbar'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './authentication/AuthContext';
 
 
 export default function Vina() {
   const [wines, setWines] = useState([]);
+  const { authenticated } = useAuth();
+  const navigate = useNavigate();
 
   const addToCart = async (idtest) => {
-    console.log(idtest)
-    const stringId = idtest.toString(); // Convert ObjectId to String
-    console.log(stringId)
-    api.post(`/api/v1/shopping-cart/add-product/659445cce9df798da9817616/${stringId}`)
-    .then(function (response) {
-        console.log(response);
-        alert("Успешно додадовте вино во корпата")
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+    if (!authenticated) {
+      navigate('/login'); 
+      return;
+    } else {
+        console.log(idtest)
+        const stringId = idtest.toString(); // Convert ObjectId to String
+        console.log(stringId)
+        api.post(`/api/v1/shopping-cart/add-product/659445cce9df798da9817616/${stringId}`)
+        .then(function (response) {
+            console.log(response);
+            alert("Успешно додадовте вино во корпата")
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+    
 }
 
 
@@ -41,7 +50,7 @@ export default function Vina() {
 
   return (
     <div className='background'>
-      <Navbar />
+      <Navbar/>
       <Container fluid>
         <Row className="wine-container">
           {wines &&
@@ -69,25 +78,6 @@ export default function Vina() {
         </Row>
       </Container>
       <hr/>
-      <div className="footer">
-                    <div className="f1">
-                        <div id="kontakt">Контакт:</div>
-                        <div className='kf1'>Е-пошта: vimak@vimak.com</div>
-                        <div className='kf1'>Телефон: 070/000-000</div>
-                        <br></br>
-                        <div>Сите права се задржани</div>
-                    </div>
-                    <div className="f2">
-                      <div className='f2Logo'>
-                            <Logo/>
-                          </div>
-                    </div>
-                    <div className="f3">
-                    <br/>
-                        <div id="politika">Политика на приватност</div>
-                        <div>Услови за купување</div>
-                    </div>
-                </div>
     </div>
     
   );
